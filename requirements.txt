@@ -4,7 +4,6 @@ extra-streamlit-components==0.1.60
 streamlit-cookies-manager==0.2.0
 streamlit-google-auth==1.1.8
 
-
 # ML & Image Processing
 tensorflow==2.13.0
 opencv-python-headless==4.9.0.80
@@ -20,4 +19,3 @@ pyrebase4==4.7.1
 # Utilities
 requests==2.32.3
 python-dotenv==1.0.1
-tensorflow-gpu==2.13.0
