@@ -35,6 +35,7 @@ firebase-adminsdk.json
 .firebaserc
 firebase-debug.log*
 firebase-debug.*.log*
+public/firebase-config.js
 
 ########################################
 # NOTEBOOK CHECKPOINTS

@@ -52,11 +52,13 @@ The dataset exploration, preprocessing decisions, and resizing steps were comple
 
 ## Directory Structure
 
+
 ```
 ├── app.py                      # Main application
 ├── Moodify.py                  # Additional module(s)
 ├── requirements.txt            # Python dependencies
-├── README.md                   # Project documentation
+├── .env.example                # Environment variable template
+├── .gitignore                  # Git ignore rules
 ├── firebase.json               # Firebase hosting config
 ├── firestore.rules             # Firestore rules
 ├── firestore.indexes.json      # Firestore database indexes
@@ -65,7 +67,8 @@ The dataset exploration, preprocessing decisions, and resizing steps were comple
 ├── models/                     # Trained model (not pushed to GitHub)
 ├── Balanced RAF 75x75/         # Kaggle dataset (ignored)
 ├── preprocessed_data/          # Extracted numpy arrays and features
-└── .env.example                # Environment variable template
+├── dataconnect/                # Data connector configs
+├── img/                        # Static images
 ```
 
 ---
@@ -87,10 +90,12 @@ All activities, including deliverables and screenshots of working modules, are r
 
 ## Installation
 
+
 ```bash
-git clone https://github.com/yourusername/moodify.git
-cd moodify
+git clone https://github.com/Akashj-aj/Moodify.git
+cd Moodify
 pip install -r requirements.txt
+cp .env.example .env  # then fill in your secrets
 streamlit run app.py
 ```
 
@@ -125,20 +130,4 @@ The project was supported by Infosys Springboard's virtual internship program, w
 
 ## License
 
-This project is intended for academic, educational, and research use. Dataset and API usage is subject to third-party licensing.
-```
-app.py
-requirements.txt
-.env.example
-.gitignore
-models/
-preprocessed_data/
-public/
-notebooks/
-Balanced RAF 75x75/
-dataconnect/
-img/
-```
-
-## License
-MIT
+This project is intended for academic, educational, and research use. Dataset and API usage is subject to third-party licensing. For code, see the LICENSE file (MIT).

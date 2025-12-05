@@ -99,13 +99,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-<script>
-const firebaseConfig = { 
-  apiKey: "AIzaSyBJsyR0p6ur2djSEppdvvysFFMGe9IqLv0", 
-  authDomain: "studio-5934774658-e4401.firebaseapp.com", 
-  projectId: "studio-5934774658-e4401" 
-};
-firebase.initializeApp(firebaseConfig);
+<script src="firebase-config.js">
 const auth = firebase.auth();
 const db = firebase.firestore();
 const STREAMLIT_URL = "http://localhost:8501/?auth=";
