@@ -2,7 +2,8 @@
 streamlit==1.42.0
 extra-streamlit-components==0.1.60
 streamlit-cookies-manager==0.2.0
-streamlit-google-auth==0.1.0
+streamlit-google-auth==1.1.8
+
 
 # ML & Image Processing
 tensorflow==2.13.0
