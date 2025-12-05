@@ -18,5 +18,4 @@ pyrebase4==4.7.1
 
 # Utilities
 requests==2.29.0
-
 python-dotenv==1.0.1
