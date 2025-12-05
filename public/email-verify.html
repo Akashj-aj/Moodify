@@ -47,8 +47,8 @@ body::after{content:"";position:fixed;top:-2500px;left:50%;transform:translateX(
 const auth = firebase.auth();
 
 // CHANGE THIS WHEN DEPLOYING
-const STREAMLIT_URL = "http://localhost:8501/?auth=";
-// Production: "https://your-moodify.streamlit.app/?auth="
+const STREAMLIT_URL = "https://moodify--music.streamlit.app/?auth=";
+
 
 async function resendVerification() {
   const status = document.getElementById("status");
