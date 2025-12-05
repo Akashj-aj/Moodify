@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodify – Create Account</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+  * {margin:0;padding:0;box-sizing:border-box;}
+  body,html{height:100vh;background:#000;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;color:white;}
+  
+  /* Epic background */
+  body::before{
+    content:"";position:fixed;top:-300px;left:50%;transform:translateX(-50%);
+    width:2800px;height:1600px;
+    background:radial-gradient(ellipse at center,rgba(255,255,255,0.22)0%,rgba(255,255,255,0.12)25%,transparent 70%);
+    filter:blur(80px);opacity:0.9;pointer-events:none;z-index:1;
+  }
+  body::after{
+    content:"";position:fixed;top:-2500px;left:50%;transform:translateX(-50%);
+    width:4000px;height:3500px;
+    background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,0.07)0deg 0.9deg,transparent 0.9deg 18deg);
+    opacity:0.7;filter:blur(2px);animation:spin 380s linear infinite;pointer-events:none;z-index:0;
+  }
+  @keyframes spin{from{transform:translateX(-50%) rotate(0deg)}to{transform:translateX(-50%) rotate(360deg)}}
+
+  .container{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:2rem;position:relative;z-index:10;
+  }
+  .card{
+    max-width:420px;width:100%;padding:48px 40px;
+    background:rgba(255,255,255,0.05);border-radius:24px;
+    border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(18px);
+    box-shadow:0 12px 40px rgba(0,0,0,0.4);text-align:center;
+  }
+  .title{
+    font-size:64px;font-weight:900;
+    background:linear-gradient(180deg,#fff 0%,#e0e0e0 30%,#888 70%,#555 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    letter-spacing:6px;margin-bottom:8px;
+  }
+
+  /* Input fields — PERFECT spacing & alignment */
+  .input-wrapper {
+    position:relative;
+    margin:22px 0;
+  }
+  input{
+    width:100%;padding:18px 50px 18px 18px;
+    border-radius:14px;border:none;
+    background:rgba(255,255,255,0.1);color:white;
+    font-size:16px;outline:none;transition:background .3s;
+  }
+  input:focus{background:rgba(255,255,255,0.15);}
+  input::placeholder{color:rgba(255,255,255,0.6);}
+
+  /* Eye icon — perfectly centered */
+  .eye{
+    position:absolute;right:16px;top:50%;transform:translateY(-50%);
+    cursor:pointer;opacity:0.7;transition:opacity .2s;
+  }
+  .eye:hover{opacity:1;}
+
+  .btn{
+    height:58px;margin-top:32px;border-radius:29px;
+    font-size:17px;font-weight:700;cursor:pointer;
+    background:#fff;color:#000;border:none;width:100%;
+    transition:all .3s;position:relative;overflow:hidden;
+  }
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.5);}
+  .btn:active::after{
+    content:'';position:absolute;top:50%;left:50%;
+    width:300px;height:300px;background:rgba(255,255,255,0.3);
+    border-radius:50%;transform:translate(-50%,-50%);
+    animation:ripple .6s ease-out;opacity:0;
+  }
+  @keyframes ripple{to{width:0;height:0;opacity:0;}}
+
+  #msg{color:#ff6b6b;margin-top:12px;font-size:14px;min-height:20px;}
+  a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:15px;margin-top:30px;display:block;}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1 class="title">MOODIFY</h1>
+    <p style="opacity:0.9;margin-bottom:8px;font-size:18px;">Create Account</p>
+    <p style="opacity:0.8;font-size:15px;margin-bottom:32px;">Join Moodify and discover music through emotions</p>
+
+    <!-- Username -->
+    <div class="input-wrapper">
+      <input type="text" id="name" placeholder="Choose a username">
+    </div>
+
+    <!-- Email -->
+    <div class="input-wrapper">
+      <input type="email" id="email" placeholder="your.email@example.com">
+    </div>
+
+    <!-- Password with eye -->
+    <div class="input-wrapper">
+      <input type="password" id="pass" placeholder="Min 6 characters">
+      <div class="eye" onclick="togglePass()">
+        <svg id="eye-open-reg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+        <svg id="eye-closed-reg" style="display:none" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="msg"></div>
+    <button class="btn" onclick="signup()">Create Account</button>
+    <a href="index.html">Back to Home</a>
+  </div>
+</div>
+
+<script>
+const firebaseConfig = { 
+  apiKey: "AIzaSyBJsyR0p6ur2djSEppdvvysFFMGe9IqLv0", 
+  authDomain: "studio-5934774658-e4401.firebaseapp.com", 
+  projectId: "studio-5934774658-e4401" 
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const STREAMLIT_URL = "http://localhost:8501/?auth=";
+
+function togglePass() {
+  const pass = document.getElementById("pass");
+  const open = document.getElementById("eye-open-reg");
+  const closed = document.getElementById("eye-closed-reg");
+  if (pass.type === "password") {
+    pass.type = "text"; open.style.display = "none"; closed.style.display = "block";
+  } else {
+    pass.type = "password"; open.style.display = "block"; closed.style.display = "none";
+  }
+}
+
+async function signup() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const pass = document.getElementById("pass").value;
+  const msg = document.getElementById("msg");
+
+  if (!name || !email || !pass) return msg.innerHTML = "Please fill all fields";
+  if (pass.length < 6) return msg.innerHTML = "Password must be at least 6 characters";
+
+  msg.innerHTML = "Creating your account...";
+  try {
+    const res = await auth.createUserWithEmailAndPassword(email, pass);
+    await res.user.updateProfile({ displayName: name });
+    await db.collection("users").doc(res.user.uid).set({
+      uid: res.user.uid, email, username: name, profile_pic: "", 
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
+      mood_history: { happy:0,sad:0,angry:0,neutral:0,surprise:0,fear:0,disgust:0 }
+    });
+    const payload = { uid: res.user.uid, email, displayName: name };
+    window.location.href = `email-verify.html?temp=${btoa(JSON.stringify(payload))}`;
+  } catch (e) {
+    msg.innerHTML = 
+      e.code === "auth/email-already-in-use" ? "Email already registered" :
+      e.code === "auth/invalid-email" ? "Invalid email" : "Signup failed. Try again.";
+  }
+}
+</script>
+</body>
+</html>

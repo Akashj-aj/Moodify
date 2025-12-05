@@ -1,0 +1,85 @@
+########################################
+# OS / SYSTEM FILES
+########################################
+.DS_Store
+Thumbs.db
+
+########################################
+# PYTHON CACHE
+########################################
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Explicit cache file pattern
+__pycache__/*.pyc
+
+########################################
+# STREAMLIT CONFIG (KEEP .env.example ONLY)
+########################################
+.streamlit/
+.streamlit/secrets.toml
+
+########################################
+# ENVIRONMENT VARIABLES
+########################################
+.env
+.env.*
+
+########################################
+# FIREBASE LOCAL CONFIG / CREDENTIALS
+########################################
+.firebase/
+firebase-adminsdk.json
+.firebaserc
+firebase-debug.log*
+firebase-debug.*.log*
+
+########################################
+# NOTEBOOK CHECKPOINTS
+########################################
+.ipynb_checkpoints/
+preprocessed_data/.ipynb_checkpoints/
+
+########################################
+# MACHINE LEARNING MODELS (LARGE FILES)
+########################################
+models/
+models/*.keras
+models/*.h5
+
+########################################
+# DATASETS / PREPROCESSED ARRAYS
+########################################
+Balanced RAF 75x75/
+preprocessed_data/
+dataconnect/
+img/
+
+########################################
+# COMPILED DATA FILES
+########################################
+*.npy
+*.npz
+
+########################################
+# NODE / WEB BUILD ARTIFACTS
+########################################
+node_modules/
+dist/
+build/
+.npm/
+.yarn-integrity
+
+########################################
+# PUBLIC UPLOADS (OPTIONAL)
+########################################
+public/uploads/
+
+########################################
+# BACKUP / TEMP FILES
+########################################
+*.tmp
+*.bak
+*.swp

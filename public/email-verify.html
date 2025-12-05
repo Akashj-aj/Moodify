@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodify – Verify Your Email</title>
+<style>
+* {margin:0;padding:0;box-sizing:border-box;}
+body,html{height:100vh;background:#000;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;}
+body::before{content:"";position:fixed;top:-300px;left:50%;transform:translateX(-50%);width:2800px;height:1600px;background:radial-gradient(ellipse at center,rgba(255,255,255,0.22)0%,rgba(255,255,255,0.12)25%,transparent 70%);filter:blur(80px);opacity:0.9;pointer-events:none;z-index:1;}
+body::after{content:"";position:fixed;top:-2500px;left:50%;transform:translateX(-50%);width:4000px;height:3500px;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,0.07)0deg 0.9deg,transparent 0.9deg 18deg),repeating-conic-gradient(from 15deg at 50% 50%,rgba(255,255,255,0.04)0deg 0.7deg,transparent 0.7deg 20deg);opacity:0.7;filter:blur(2px);animation:spin 380s linear infinite;pointer-events:none;z-index:0;}
+@keyframes spin{from{transform:translateX(-50%) rotate(0deg)}to{transform:translateX(-50%) rotate(360deg)}}
+.container{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;z-index:10;position:relative;text-align:center;}
+.title{font-size:78px;font-weight:900;background:linear-gradient(180deg,#fff 0%,#e0e0e0 30%,#888 70%,#555 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:8px;margin-bottom:16px;}
+.card{max-width:500px;padding:50px 40px;background:rgba(255,255,255,0.06);border-radius:24px;border:1px solid rgba(255,255,255,0.12);backdrop-filter:blur(20px);box-shadow:0 15px 50px rgba(0,0,0,0.5);color:white;}
+.icon{font-size:64px;margin-bottom:20px;}
+.btn{margin-top:32px;height:58px;padding:0 32px;border-radius:29px;background:#fff;color:#000;font-weight:700;font-size:17px;cursor:pointer;transition:all .3s;}
+.btn:hover{transform:translateY(-4px);box-shadow:0 12px 35px rgba(0,0,0,0.5);}
+#status{margin-top:20px;font-size:15px;color:#34A853;}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <div class="icon">Verify Email</div>
+    <h1 class="title">MOODIFY</h1>
+    <h2 style="margin:20px 0;font-size:24px;color:#34A853;">Check Your Inbox!</h2>
+    <p style="opacity:0.9;line-height:1.7;font-size:16px;">
+      We just sent a verification link to your email.<br><br>
+      <strong>Click the link in the email</strong> to activate your Moodify account.
+    </p>
+    <p style="margin:30px 0 10px;opacity:0.7;font-size:14px;">
+      Didn't receive it? Check spam folder or
+    </p>
+    <button class="btn" onclick="resendVerification()">Resend Email</button>
+    <div id="status"></div>
+    <p style="margin-top:20px;opacity:0.6;font-size:13px;">
+      Already verified? <a href="auth.html" style="color:#4285F4;">Go to Login</a>
+    </p>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBJsyR0p6ur2djSEppdvvysFFMGe9IqLv0",
+  authDomain: "studio-5934774658-e4401.firebaseapp.com",
+  projectId: "studio-5934774658-e4401",
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// CHANGE THIS WHEN DEPLOYING
+const STREAMLIT_URL = "http://localhost:8501/?auth=";
+// Production: "https://your-moodify.streamlit.app/?auth="
+
+async function resendVerification() {
+  const status = document.getElementById("status");
+  if (!auth.currentUser) {
+    status.style.color = "#ff6b6b";
+    status.textContent = "No user found. Please sign up again.";
+    return;
+  }
+  try {
+    await auth.currentUser.sendEmailVerification();
+    status.style.color = "#34A853";
+    status.textContent = "Verification email sent again! Check your inbox.";
+  } catch (e) {
+    status.style.color = "#ff6b6b";
+    status.textContent = "Error: " + e.message;
+  }
+}
+
+// Auto-detect verification and redirect
+setInterval(() => {
+  if (auth.currentUser) {
+    auth.currentUser.reload().then(() => {
+      if (auth.currentUser.emailVerified) {
+        document.getElementById("status").innerHTML = 
+          "<div style='color:#34A853;font-weight:600;'>Email verified! Redirecting...</div>";
+        
+        const payload = {
+          uid: auth.currentUser.uid,
+          email: auth.currentUser.email,
+          displayName: auth.currentUser.displayName || auth.currentUser.email.split("@")[0]
+        };
+        window.location.href = STREAMLIT_URL + btoa(JSON.stringify(payload));
+      }
+    }).catch(() => {});
+  }
+}, 2500);
+</script>
+</body>
+</html>

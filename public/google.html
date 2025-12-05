@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodify – Sign in with Google</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body,html{height:100vh;background:#000;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;color:white;}
+  
+  /* Epic animated background */
+  body::before{
+    content:"";position:fixed;top:-300px;left:50%;transform:translateX(-50%);
+    width:2800px;height:1600px;
+    background:radial-gradient(ellipse at center,rgba(255,255,255,0.22)0%,rgba(255,255,255,0.12)25%,transparent 70%);
+    filter:blur(80px);opacity:0.9;pointer-events:none;z-index:1;
+  }
+  body::after{
+    content:"";position:fixed;top:-2500px;left:50%;transform:translateX(-50%);
+    width:4000px;height:3500px;
+    background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,0.07)0deg 0.9deg,transparent 0.9deg 18deg);
+    opacity:0.7;filter:blur(2px);animation:spin 380s linear infinite;pointer-events:none;z-index:0;
+  }
+  @keyframes spin{from{transform:translateX(-50%) rotate(0deg)}to{transform:translateX(-50%) rotate(360deg)}}
+
+  /* Main container */
+  .container{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    padding:2rem;position:relative;z-index:10;gap:32px;
+  }
+
+  /* Header section — perfectly centered */
+  .header{
+    text-align:center;display:flex;flex-direction:column;align-items:center;
+  }
+  .title{
+    font-size:86px;font-weight:900;
+    background:linear-gradient(180deg,#fff 0%,#e0e0e0 30%,#888 70%,#555 100%);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    letter-spacing:9px;text-transform:uppercase;margin:0;line-height:1;
+  }
+  .subtitle{
+    color:rgba(255,255,255,0.88);font-size:17px;letter-spacing:7px;
+    text-transform:uppercase;margin:12px 0 0;font-weight:500;
+  }
+
+  /* Login card */
+  .card{
+    max-width:420px;width:100%;padding:48px 40px;
+    background:rgba(255,255,255,0.05);border-radius:24px;
+    border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(18px);
+    box-shadow:0 12px 40px rgba(0,0,0,0.4);text-align:center;
+  }
+
+  .google-btn{
+    margin-top:20px;height:62px;width:100%;border-radius:31px;
+    background:rgba(255,255,255,0.09);border:1.5px solid rgba(255,255,255,0.2);
+    color:white;font-size:17px;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:16px;
+    transition:all .3s;backdrop-filter:blur(14px);
+  }
+  .google-btn:hover{
+    background:rgba(255,255,255,0.16);transform:translateY(-4px);
+    box-shadow:0 12px 35px rgba(0,0,0,0.4);
+  }
+
+  #status{margin-top:20px;color:#34A853;font-weight:600;min-height:24px;}
+  a{color:rgba(255,255,255,0.7);text-decoration:none;font-size:15px;margin-top:28px;display:block;}
+</style>
+</head>
+<body>
+<div class="container">
+  <!-- Header — now perfectly centered -->
+  <div class="header">
+    <h1 class="title">MOODIFY</h1>
+    <p class="subtitle">EMOTION POWERED MUSIC</p>
+  </div>
+
+  <!-- Login Card -->
+  <div class="card">
+    <h2 style="margin-bottom:8px;">Welcome Back</h2>
+    <p style="opacity:0.9;margin-bottom:24px;">Sign in to continue your musical journey</p>
+    
+    <button class="google-btn" onclick="googleLogin()">
+      <svg width="22" height="22" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      Continue with Google
+    </button>
+    
+    <div id="status"></div>
+    <a href="index.html">Back to Home</a>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = { 
+  apiKey: "AIzaSyBJsyR0p6ur2djSEppdvvysFFMGe9IqLv0", 
+  authDomain: "studio-5934774658-e4401.firebaseapp.com", 
+  projectId: "studio-5934774658-e4401" 
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const STREAMLIT_URL = "http://localhost:8501/?auth=";
+
+async function googleLogin() {
+  const status = document.getElementById("status");
+  status.textContent = "Signing in...";
+  try {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    const docRef = db.collection("users").doc(user.uid);
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      await docRef.set({
+        uid: user.uid, email: user.email, username: user.displayName || user.email.split("@")[0],
+        profile_pic: user.photoURL || "", created_at: firebase.firestore.FieldValue.serverTimestamp(),
+        mood_history: { happy:0,sad:0,angry:0,neutral:0,surprise:0,fear:0,disgust:0 }
+      });
+    }
+    const payload = { uid: user.uid, email: user.email, displayName: user.displayName || user.email.split("@")[0], photoURL: user.photoURL };
+    window.location.href = STREAMLIT_URL + btoa(JSON.stringify(payload));
+  } catch (error) {
+    status.style.color = "#ff6b6b";
+    status.textContent = error.code === "auth/popup-blocked" ? "Pop-up blocked! Allow pop-ups" : "Sign-in failed.";
+  }
+}
+</script>
+</body>
+</html>

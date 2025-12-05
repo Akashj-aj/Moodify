@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodify – Login</title>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<style>
+* {margin:0;padding:0;box-sizing:border-box;}
+body,html{height:100vh;background:#000;overflow:hidden;font-family:system-ui,-apple-system,sans-serif;}
+body::before{content:"";position:fixed;top:-300px;left:50%;transform:translateX(-50%);width:2800px;height:1600px;background:radial-gradient(ellipse at center,rgba(255,255,255,0.22)0%,rgba(255,255,255,0.12)25%,transparent 70%);filter:blur(80px);opacity:0.9;pointer-events:none;z-index:1;}
+body::after{content:"";position:fixed;top:-2500px;left:50%;transform:translateX(-50%);width:4000px;height:3500px;background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,0.07)0deg 0.9deg,transparent 0.9deg 18deg),repeating-conic-gradient(from 15deg at 50% 50%,rgba(255,255,255,0.04)0deg 0.7deg,transparent 0.7deg 20deg);opacity:0.7;filter:blur(2px);animation:spin 380s linear infinite;pointer-events:none;z-index:0;}
+@keyframes spin{from{transform:translateX(-50%) rotate(0deg)}to{transform:translateX(-50%) rotate(360deg)}}
+
+.container{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;z-index:10;position:relative;}
+.card{max-width:420px;width:100%;padding:48px 40px;background:rgba(255,255,255,0.05);border-radius:24px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(18px);box-shadow:0 12px 40px rgba(0,0,0,0.4);text-align:center;color:white;}
+.title{font-size:64px;font-weight:900;background:linear-gradient(180deg,#fff 0%,#e0e0e0 30%,#888 70%,#555 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:6px;margin-bottom:8px;}
+
+.input-group{position:relative;margin:16px 0;}
+input{margin:0;padding:18px 50px 18px 18px;border-radius:14px;border:none;background:rgba(255,255,255,0.1);color:white;font-size:16px;width:100%;outline:none;}
+input::placeholder{color:rgba(255,255,255,0.6);}
+.eye{position:absolute;right:16px;top:50%;transform:translateY(-50%);cursor:pointer;opacity:0.7;transition:all .2s;}
+.eye:hover{opacity:1;}
+
+.btn{
+  height:58px;margin-top:28px;border-radius:29px;font-size:17px;font-weight:700;
+  cursor:pointer;transition:all .3s;background:#fff;color:#000;border:none;
+  width:100%;position:relative;overflow:hidden;
+}
+.btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.5);}
+.btn:active::after{content:'';position:absolute;top:50%;left:50%;width:300px;height:300px;
+  background:rgba(255,255,255,0.3);border-radius:50%;transform:translate(-50%,-50%);
+  animation:ripple 0.6s ease-out;}
+@keyframes ripple{to{width:0;height:0;opacity:0;}}
+
+.link{color:#4285F4;font-size:14px;margin:16px 0;display:block;}
+#msg{margin-top:12px;font-size:14px;min-height:40px;color:#ff6b6b;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1 class="title">MOODIFY</h1>
+    <p style="opacity:0.9;margin-bottom:24px;font-size:18px;">Welcome Back</p>
+
+    <input type="email" id="email" placeholder="your.email@example.com" required>
+    
+    <div class="input-group">
+      <input type="password" id="pass" placeholder="Enter your password" required>
+      <div class="eye" onclick="togglePass()">
+        <svg id="eye-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        <svg id="eye-closed" style="display:none" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+          <line x1="1" y1="1" x2="23" y2="23"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="msg"></div>
+    <button class="btn" onclick="login()">Login</button>
+    <a href="password-reset.html" class="link">Forgot your password?</a>
+    <a href="index.html" style="margin-top:30px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:15px;display:block;">Back to Home</a>
+  </div>
+</div>
+
+<script>
+const firebaseConfig = { apiKey: "AIzaSyBJsyR0p6ur2djSEppdvvysFFMGe9IqLv0", authDomain: "studio-5934774658-e4401.firebaseapp.com", projectId: "studio-5934774658-e4401" };
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const STREAMLIT_URL = "http://localhost:8501/?auth=";
+
+function togglePass() {
+  const pass = document.getElementById("pass");
+  const open = document.getElementById("eye-open");
+  const closed = document.getElementById("eye-closed");
+  if (pass.type === "password") {
+    pass.type = "text";
+    open.style.display = "none";
+    closed.style.display = "block";
+  } else {
+    pass.type = "password";
+    open.style.display = "block";
+    closed.style.display = "none";
+  }
+}
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const pass = document.getElementById("pass").value;
+  const msg = document.getElementById("msg");
+
+  if (!email || !pass) return msg.innerHTML = "Please fill in all fields";
+
+  msg.style.color = "#888";
+  msg.innerHTML = "Signing you in...";
+
+  try {
+    const res = await auth.signInWithEmailAndPassword(email, pass);
+    const user = res.user;
+
+    if (!user.emailVerified) {
+      msg.style.color = "#ff6b6b";
+      msg.innerHTML = `Please verify your email first!<br>
+        <a href="email-verify.html" style="color:#4285F4;text-decoration:underline;">Resend verification email</a>`;
+      await auth.signOut();
+      return;
+    }
+
+    const payload = { uid: user.uid, email: user.email, displayName: user.displayName || email.split("@")[0] };
+    window.location.href = STREAMLIT_URL + btoa(JSON.stringify(payload));
+
+  } catch (e) {
+    const errorMsg = 
+      e.code === "auth/user-not-found" ? "No account found with this email." :
+      e.code === "auth/wrong-password" ? "Incorrect password." :
+      e.code === "auth/invalid-email" ? "Please enter a valid email address." :
+      e.code === "auth/too-many-requests" ? "Too many attempts. Try again later." :
+      e.code === "auth/network-request-failed" ? "No internet connection." :
+      "Login failed. Please try again.";
+    msg.innerHTML = errorMsg;
+  }
+}
+</script>
+</body>
+</html>

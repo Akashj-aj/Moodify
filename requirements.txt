@@ -1,0 +1,13 @@
+streamlit>=1.42.0
+Authlib>=1.3.2
+numpy
+opencv-python-headless
+requests
+tensorflow>=2.10.0
+pyrebase4
+firebase-admin
+h5py
+pillow
+streamlit-cookies-manager
+streamlit-google-auth
+extra-streamlit-components
