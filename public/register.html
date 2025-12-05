@@ -120,9 +120,8 @@
   </div>
 </div>
 
-  
 <script>
-  const firebaseConfig = { 
+const firebaseConfig = { 
   apiKey: "AIzaSyBJsyR0p6ur2djSEppdvvysFFMGe9IqLv0", 
   authDomain: "studio-5934774658-e4401.firebaseapp.com", 
   projectId: "studio-5934774658-e4401" 
@@ -130,7 +129,7 @@
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const STREAMLIT_URL = "https://moodify--music.streamlit.app/?auth=";
+const STREAMLIT_URL = "http://localhost:8501/?auth=";
 
 function togglePass() {
   const pass = document.getElementById("pass");

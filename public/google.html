@@ -99,9 +99,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
 <script>
-  const firebaseConfig = { 
+const firebaseConfig = { 
   apiKey: "AIzaSyBJsyR0p6ur2djSEppdvvysFFMGe9IqLv0", 
   authDomain: "studio-5934774658-e4401.firebaseapp.com", 
   projectId: "studio-5934774658-e4401" 
@@ -109,9 +108,9 @@
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const STREAMLIT_URL = "https://moodify--music.streamlit.app/?auth=";
+const STREAMLIT_URL = "http://localhost:8501/?auth=";
 
-window.googleLogin = async function (){
+async function googleLogin() {
   const status = document.getElementById("status");
   status.textContent = "Signing in...";
   try {

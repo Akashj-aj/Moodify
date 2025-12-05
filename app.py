@@ -1,10 +1,4 @@
 
-# ------------------- SILENCE WARNINGS -------------------
-import os
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-import tensorflow as tf
-tf.get_logger().setLevel('ERROR')
 import streamlit as st
 import numpy as np
 import cv2
@@ -18,8 +12,14 @@ from firebase_admin import credentials, firestore
 from tensorflow import keras
 from dotenv import load_dotenv
 load_dotenv()
-
+import os
 import time
+
+# ------------------- SILENCE WARNINGS -------------------
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import tensorflow as tf
+tf.get_logger().setLevel('ERROR')
 # ------------------- CINEMATIC DARK THEME + PERFECT STREAMLIT NAVBAR -------------------
 st.set_page_config(page_title="Moodify", layout="wide")
 st.markdown("""
