@@ -404,7 +404,7 @@ if st.session_state.user is None:
     <h1 style="text-align:center;color:#1db954;font-size:80px;margin-top:40vh;">MOODIFY</h1>
     """, unsafe_allow_html=True)
     st.stop()
-# ------------------- BEAUTIFUL STREAMLIT NAVBAR -------------------
+# -------------------  STREAMLIT NAVBAR -------------------
 st.markdown('<div class="moodify-navbar">', unsafe_allow_html=True)
 left, center, right = st.columns([4, 12, 2], gap="large")
 with left:
@@ -633,7 +633,7 @@ with col_main:
                 # UPLOAD METHOD
                 pic_method = st.radio("Change picture via", ["Upload Image", "Image URL"], horizontal=True, key="pic_method_change")
 
-                # === UPLOAD LOGIC (Upload Image) ===
+                # === UPLOAD LOGIC  ===
                 if pic_method == "Upload Image":
                     uploaded = st.file_uploader("Choose new picture", type=["png", "jpg", "jpeg"], key="profile_uploader", label_visibility="collapsed")
                     if uploaded:
@@ -641,7 +641,7 @@ with col_main:
                         b64 = base64.b64encode(bytes_data).decode()
                         st.session_state.temp_profile_pic = f"data:{uploaded.type};base64,{b64}"
 
-                # === IMAGE URL (now accepts normal URLs + base64 data URLs) ===
+                # === IMAGE URL  ===
                 else:
                     url_input = st.text_input(
                         "Enter image URL or paste base64 data URL",
@@ -663,7 +663,6 @@ with col_main:
                                 except:
                                     st.error("Cannot reach this URL")
                             else:
-                                # It's a base64 data URL → accept instantly
                                 st.session_state.temp_profile_pic = url
                         else:
                             st.error("Invalid URL — must start with http://, https:// or data:image/")
